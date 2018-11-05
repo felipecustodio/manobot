@@ -1,1 +1,1 @@
-web: python3 mano.py
+web: python mano.py
