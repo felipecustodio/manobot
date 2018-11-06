@@ -35,16 +35,21 @@ def main():
     # set env variables
     load_dotenv()
     BOT_TOKEN = os.getenv("TOKEN")
-
+    PORT = int(os.environ.get('PORT', '8443'))
+    
     updater = Updater(token=BOT_TOKEN)
     dispatcher = updater.dispatcher
 
-    # define bot handlers
+    # add bot handlers
     dispatcher.add_handler(MessageHandler(Filters.text, mano))
     dispatcher.add_error_handler(error)
     dispatcher.add_handler(CommandHandler('help', help))
 
-    updater.start_polling()
+    # heroku webook
+    updater.start_webhook(listen="0.0.0.0",
+                        port=PORT,
+                        url_path=BOT_TOKEN)
+    updater.bot.set_webhook("https://maninhobrownbot.herokuapp.com/" + BOT_TOKEN)
     logger.info("Bot ready.")
     updater.idle()
 
